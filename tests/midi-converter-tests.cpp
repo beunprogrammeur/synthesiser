@@ -1,8 +1,7 @@
 #include <gtest/gtest.h>
 #include "midi/converter.h"
 #include <cmath>
-#include <iostream>
-#include <string>
+
 TEST(MIDIConverter, ConvertNoteToFrequency)
 {
 	// https://nl.wikipedia.org/wiki/Musical_Instrument_Digital_Interface
