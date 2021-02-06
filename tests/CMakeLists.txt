@@ -22,3 +22,4 @@ endfunction()
 # The tests
 
 add_test_executable(midi-converter-tests "midi-converter-tests.cpp" "midi/converter.cpp")
+add_test_executable(observer-tests "observer-tests.cpp")
