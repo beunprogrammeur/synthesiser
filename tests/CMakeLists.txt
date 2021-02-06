@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
-project(cmake-googletest-example)
+set(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -g")
+
+project(cmake-googletest-synthesizer)
 
 include(CTest)
 include(../GoogleTest.cmake)
@@ -23,3 +25,4 @@ endfunction()
 
 add_test_executable(midi-converter-tests "midi-converter-tests.cpp" "midi/converter.cpp")
 add_test_executable(observer-tests "observer-tests.cpp")
+add_test_executable(adsr-envelope-tests "adsr-envelope-tests.cpp" "synthesis/envelopes/adsr_envelope.cpp")

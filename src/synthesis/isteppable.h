@@ -6,11 +6,15 @@ class ISteppable
 {
 private:
     float _time;
+   
 protected:
-    virtual void next() = 0;
-    float time() const         { return _time;               }
+    ISteppable() : _time(0.0f)  {                                    }
+    float time() const          { return _time;                      }
+    virtual float next() = 0;
 public:
-    void next(float deltaTime) { _time += deltaTime; next(); }
-    virtual void reset()       { _time  = 0;                 }
+    virtual float next(float deltaTime) { _time += deltaTime; return next(); }
+    virtual void reset()        { _time  = 0;                        }
+    
+
 };
 }
