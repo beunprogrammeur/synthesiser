@@ -1,12 +1,13 @@
 #pragma once
-#include "ioscillator.h"
+#include "sawtooth_oscillator.h"
 
 namespace BOSSCorp::Synthesis::Oscillators
 {
 
-class ReverseSawToothOscillator : public IOscillator
+class ReverseSawToothOscillator : public SawToothOscillator
 {
-    
+protected:
+    virtual float next();
 };
 
 } // end BOSSCorp::Synthesis::Oscillators
