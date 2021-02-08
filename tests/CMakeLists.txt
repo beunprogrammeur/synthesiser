@@ -39,3 +39,4 @@ add_test_executable(reverse-sawtooth-oscillator-tests "reverse-sawtooth-oscillat
 add_test_executable(triangle-oscillator-tests "triangle-oscillator-tests.cpp" "synthesis/oscillators/triangle_oscillator.cpp" "synthesis/oscillators/sawtooth_oscillator.cpp")
 add_test_executable(pwm-oscillator-tests "pwm-oscillator-tests.cpp" "synthesis/oscillators/pwm_oscillator.cpp")
 add_test_executable(sine-oscillator-tests "sine-oscillator-tests.cpp" "synthesis/oscillators/sine_oscillator.cpp")
+add_test_executable(noise-oscillator-tests "noise-oscillator-tests.cpp" "synthesis/oscillators/noise_oscillator.cpp")
