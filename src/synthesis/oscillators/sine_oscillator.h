@@ -6,7 +6,8 @@ namespace BOSSCorp::Synthesis::Oscillators
 
 class SineOscillator : public IOscillator
 {
-    
+protected:
+    virtual float next();
 };
 
 } // end BOSSCorp::Synthesis::Oscillators
