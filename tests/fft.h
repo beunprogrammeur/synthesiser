@@ -64,6 +64,31 @@ bool plot(const std::string& name, BOSSCorp::Synthesis::Oscillators::IOscillator
     return true;
 }
 
+void dataplot(std::string filename, std::vector<float>& plotData)
+{
+    std::ofstream csv;
+    csv.open(filename + ".gnuplot.csv");
+
+    for(auto point : plotData)
+    {
+        csv << std::setprecision(10) << std::fixed <<  point << std::endl;
+    }
+    csv.close();
+
+    std::ofstream gnuplot;
+    gnuplot.open(filename + ".gnuplot");
+
+    gnuplot << "set datafile separator ','" << std::endl;
+    //gnuplot << "set xtics " << std::fixed << size * (1.0 / oscillator.frequency()) << std::endl;
+    gnuplot << "set xlabel 'time'" << std::endl;
+    gnuplot << "set ylabel 'amplitude'" << std::endl;
+    //gnuplot << "set mxtics " << 500 << std::endl;
+    //gnuplot << "show mxtics" << std::endl;
+    gnuplot <<  " "     <<  std::endl;
+    gnuplot << "plot '" << filename << ".gnuplot.csv" << "' using 0:1 with lines" << std::endl;
+    gnuplot.close();
+}
+
 void autoplot(std::string waveform, BOSSCorp::Synthesis::Oscillators::IOscillator& oscillator)
 {
     int frequencies[] {20, 440, 3000};

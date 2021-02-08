@@ -16,6 +16,7 @@ protected:
 public:
     explicit ADSREnvelope(ADSRConfiguration& configuration) : _configuration(configuration), _releaseTimestamp(0){ }
     void release() { _released = true; _releaseTimestamp = time(); }
+    virtual void reset() {_released = false; _releaseTimestamp = 0; IEnvelope::reset(); }
 };
 
 } // end BOSSCorp::Synthesis::Envelopes
