@@ -37,3 +37,4 @@ add_test_executable(adsr-envelope-tests "adsr-envelope-tests.cpp" "synthesis/env
 add_test_executable(sawtooth-oscillator-tests "sawtooth-oscillator-tests.cpp" "synthesis/oscillators/sawtooth_oscillator.cpp" "synthesis/oscillators/reverse_sawtooth_oscillator.cpp")
 add_test_executable(reverse-sawtooth-oscillator-tests "reverse-sawtooth-oscillator-tests.cpp" "synthesis/oscillators/reverse_sawtooth_oscillator.cpp" "synthesis/oscillators/sawtooth_oscillator.cpp")
 add_test_executable(triangle-oscillator-tests "triangle-oscillator-tests.cpp" "synthesis/oscillators/triangle_oscillator.cpp" "synthesis/oscillators/sawtooth_oscillator.cpp")
+add_test_executable(pwm-oscillator-tests "pwm-oscillator-tests.cpp" "synthesis/oscillators/pwm_oscillator.cpp")

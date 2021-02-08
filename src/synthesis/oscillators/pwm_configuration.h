@@ -6,9 +6,7 @@ namespace BOSSCorp::Synthesis::Oscillators
 
 struct PWMConfiguration
 {
-public:
-    float dutyCycle;
-    float offset;
+    float dutyCycle = 0.5f;
 };
 
 } // end BOSSCorp::Synthesis::Oscillators
