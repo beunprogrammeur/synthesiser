@@ -40,3 +40,14 @@ add_test_executable(triangle-oscillator-tests "triangle-oscillator-tests.cpp" "s
 add_test_executable(pwm-oscillator-tests "pwm-oscillator-tests.cpp" "synthesis/oscillators/pwm_oscillator.cpp")
 add_test_executable(sine-oscillator-tests "sine-oscillator-tests.cpp" "synthesis/oscillators/sine_oscillator.cpp")
 add_test_executable(noise-oscillator-tests "noise-oscillator-tests.cpp" "synthesis/oscillators/noise_oscillator.cpp")
+
+# sound sources
+add_test_executable(poly-sound-source-tests "poly-sound-source-tests.cpp" 
+                   "synthesis/sound_sources/poly_sound_source.cpp" 
+                   "synthesis/envelopes/adsr_envelope.cpp" 
+                   "synthesis/oscillators/sine_oscillator.cpp"
+                   "synthesis/oscillators/sawtooth_oscillator.cpp"
+                   "synthesis/oscillators/reverse_sawtooth_oscillator.cpp"
+                   "synthesis/oscillators/noise_oscillator.cpp"
+                   "synthesis/oscillators/pwm_oscillator.cpp"
+                   "synthesis/oscillators/triangle_oscillator.cpp")
