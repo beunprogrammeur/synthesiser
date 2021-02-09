@@ -29,7 +29,6 @@ add_test_executable(observer-tests "observer-tests.cpp")
 # midi tests
 add_test_executable(midi-converter-tests "midi-converter-tests.cpp" "midi/converter.cpp")
 
-
 # envelope tests
 add_test_executable(adsr-envelope-tests "adsr-envelope-tests.cpp" "synthesis/envelopes/adsr_envelope.cpp")
 
@@ -51,3 +50,8 @@ add_test_executable(poly-sound-source-tests "poly-sound-source-tests.cpp"
                    "synthesis/oscillators/noise_oscillator.cpp"
                    "synthesis/oscillators/pwm_oscillator.cpp"
                    "synthesis/oscillators/triangle_oscillator.cpp")
+
+# midi sources and sinks
+add_test_executable(synth-midi-sink-tests "synth-midi-sink-tests.cpp" 
+                   "midi/synthesizer_midi_sink.cpp"
+                   "midi/converter.cpp")

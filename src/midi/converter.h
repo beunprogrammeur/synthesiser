@@ -1,16 +1,17 @@
 #pragma once
-#include "note.h"
+#include "enums.h"
 
-namespace BOSSCorp::MIDI
+namespace BOSSCorp::Midi
 {
 
 class Converter {
 public:
-    static float toFrequency(Note note, int8_t octave);
-    static float toFrequency(int8_t midiPitch);
+    static float   toFrequency(Note note, int8_t octave);
+    static float   toFrequency(int8_t midiPitch);
+    static Channel toChannel(Status status);
+    static Status  stripChannel(Status status);
+    static void    toNote(int midiPitch, Note& note, int8_t& octave);
 
-private:
-    static void getNote(int midiPitch, Note& note, int8_t& octave);
     
 };
 

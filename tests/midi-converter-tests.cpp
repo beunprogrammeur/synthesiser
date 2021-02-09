@@ -2,11 +2,11 @@
 #include "midi/converter.h"
 #include <cmath>
 
-TEST(MIDIConverter, ConvertNoteToFrequency)
+TEST(MidiConverter, ConvertNoteToFrequency)
 {
 	// https://nl.wikipedia.org/wiki/Musical_Instrument_Digital_Interface
 
-	using namespace BOSSCorp::MIDI;
+	using namespace BOSSCorp::Midi;
 
 	using value = std::tuple<float, Note, int>; // expected freq. , note, octave
 	value values[] {
@@ -26,9 +26,9 @@ TEST(MIDIConverter, ConvertNoteToFrequency)
 	}
 }
 
-TEST(MIDIConverter, ConvertPitchToFrequency)
+TEST(MidiConverter, ConvertPitchToFrequency)
 {
-	using namespace BOSSCorp::MIDI;
+	using namespace BOSSCorp::Midi;
 	using value = std::tuple<float, uint8_t>; // expected freq. , midi pitch
 	value values[] {
 		value(27.5,   21),  // A0
