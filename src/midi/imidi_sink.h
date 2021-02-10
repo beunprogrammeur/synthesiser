@@ -13,7 +13,7 @@ private:
     bool    _omniMode = false;
 
 protected:
-    bool meantForMe(MidiEvent& event) const 
+    bool meantForMe(const MidiEvent& event) const 
     {
         if(omniMode()) return true;
 
@@ -36,9 +36,9 @@ protected:
 public:
     explicit IMidiSink(Channel channel) : _channel(channel), _omniMode(false) {}
 
-    bool    omniMode() const { return _omniMode; }
-    Channel channel()  const { return _channel;  }
-    virtual void receive(MidiEvent& event) = 0;
+    bool    omniMode()   const { return _omniMode; }
+    Channel channel()    const { return _channel;  }
+    virtual void receive(const MidiEvent& event) = 0;
 };
 
 } //  BOSSCorp::Midi

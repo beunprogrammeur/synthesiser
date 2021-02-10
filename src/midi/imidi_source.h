@@ -9,11 +9,9 @@ class IMidiSource {
 private:
     BOSSCorp::Pattern::Observer<IMidiSource&, const MidiEvent&> _event;
 
-protected:
-    void send(MidiEvent& event)     { _event.raise(*this, event); }
-
 public:
-    void subscribe(IMidiSink& sink) { _event.subscribe([&sink](auto& sender, auto& event) { sink.receive(event); }); }
+    void send(const MidiEvent& event) { _event.raise(*this, event); }
+    void subscribe(IMidiSink& sink)   { _event.subscribe([&sink](auto& sender, auto& event) { sink.receive(event); }); }
 };
 
 } //  BOSSCorp::Midi

@@ -9,30 +9,30 @@ class SynthesizerMidiSink : public IMidiSink
 private:
     BOSSCorp::Synthesis::Synthesizers::ISynthesizer& _synth;
 
-    void noteOn(MidiEvent& event);
-    void noteOff(MidiEvent& event);
-    void volume(MidiEvent& event);
-    void pitchBend(MidiEvent& event);
-    void effect1(MidiEvent& event);
-    void effect2(MidiEvent& event);
-    void lowPassFilter(MidiEvent& event);
-    void highPassFilter(MidiEvent& event);
-    void attack(MidiEvent& event);
-    void decay(MidiEvent& event);
-    void sustain(MidiEvent& event);
-    void release(MidiEvent& event);
+    void noteOn(const MidiEvent& event);
+    void noteOff(const MidiEvent& event);
+    void volume(const MidiEvent& event);
+    void pitchBend(const MidiEvent& event);
+    void effect1(const MidiEvent& event);
+    void effect2(const MidiEvent& event);
+    void lowPassFilter(const MidiEvent& event);
+    void highPassFilter(const MidiEvent& event);
+    void attack(const MidiEvent& event);
+    void decay(const MidiEvent& event);
+    void sustain(const MidiEvent& event);
+    void release(const MidiEvent& event);
 
-    void monoMode(MidiEvent& event);
-    void polyMode(MidiEvent& event);
-    void allNotesOff(MidiEvent& event);
-    void reset(MidiEvent& event);
+    void monoMode(const MidiEvent& event);
+    void polyMode(const MidiEvent& event);
+    void allNotesOff(const MidiEvent& event);
+    void reset(const MidiEvent& event);
 
-    void controlChange(MidiEvent& event);
+    void controlChange(const MidiEvent& event);
 
-    float toFloat(uint8_t data2, float min, float max) const;
-    float toFloat(uint16_t data, float min, float max) const;
+    float map(uint8_t data2, float min, float max) const;
+    float map2(uint16_t data, float min, float max) const;
 public:
     SynthesizerMidiSink(Channel channel, BOSSCorp::Synthesis::Synthesizers::ISynthesizer& synth) : IMidiSink(channel), _synth(synth) { }
-    virtual void receive(MidiEvent& event);
+    virtual void receive(const MidiEvent& event);
 };
 }

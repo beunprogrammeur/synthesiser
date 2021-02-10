@@ -6,7 +6,7 @@
 namespace BOSSCorp::Midi
 {
 
-void SynthesizerMidiSink::receive(MidiEvent& event)
+void SynthesizerMidiSink::receive(const MidiEvent& event)
 {
     if(!IMidiSink::meantForMe(event)) return;
 
@@ -26,7 +26,7 @@ void SynthesizerMidiSink::receive(MidiEvent& event)
     }
 }
 
-void SynthesizerMidiSink::controlChange(MidiEvent& event) 
+void SynthesizerMidiSink::controlChange(const MidiEvent& event) 
 {
     CC cc = static_cast<CC>(event.data1());
 
@@ -40,7 +40,8 @@ void SynthesizerMidiSink::controlChange(MidiEvent& event)
         case CC::LowPassFilterFrequency: lowPassFilter(event);   return;
         case CC::SoundDecayTime: decay(event);                   return;
         case CC::HighPassFilterFrequency: highPassFilter(event); return;
-        
+        case CC::Sustain: sustain(event);                        return;
+
         case CC::AllNotesOff: allNotesOff(event); return;
         case CC::OmniModeOff: omniMode(false);    return;
         case CC::OmniModeOn: omniMode(true);      return;
@@ -49,7 +50,7 @@ void SynthesizerMidiSink::controlChange(MidiEvent& event)
     }
 }
 
-float SynthesizerMidiSink::toFloat(uint8_t data2, float min, float max) const
+float SynthesizerMidiSink::map(uint8_t data2, float min, float max) const
 {
     constexpr int maxdata2 = 127;
     constexpr int mindata2 = 0;
@@ -59,104 +60,104 @@ float SynthesizerMidiSink::toFloat(uint8_t data2, float min, float max) const
     return (max - min) / maxdata2 * data2;
 }
 
-float SynthesizerMidiSink::toFloat(uint16_t data, float min, float max) const
+float SynthesizerMidiSink::map2(uint16_t data, float min, float max) const
 {
-    constexpr int maxdata     = 0x7fff;
+    constexpr int maxdata     = 0x3fff;
     constexpr int centervalue = 0x4000;
     constexpr int mindata     = 0x0000;
 
     if (data == centervalue) return (max - min) / 2.0;
-    if (data == maxdata) return max;
-    if (data == mindata) return min;
+    if (data >= maxdata) return max;
+    if (data <= mindata) return min;
 
     return (max - min) / maxdata * data;
 }
 
-void SynthesizerMidiSink::noteOn(MidiEvent& event) 
+void SynthesizerMidiSink::noteOn(const MidiEvent& event) 
 {
     Note note;
     int8_t octave;
     Converter::toNote(event.data1(),note, octave);
 
-    _synth.noteOn(note, octave, toFloat(event.data2(), 0.0, 1.0));
+    _synth.noteOn(note, octave, map(event.data2(), 0.0, 1.0));
 }
 
-void SynthesizerMidiSink::noteOff(MidiEvent& event) 
+void SynthesizerMidiSink::noteOff(const MidiEvent& event) 
 {
     Note note;
     int8_t octave;
     Converter::toNote(event.data1(),note, octave);
 
-    _synth.noteOff(note, octave, toFloat(event.data2(), 0.0, 1.0));
+    _synth.noteOff(note, octave, map(event.data2(), 0.0, 1.0));
 }
 
-void SynthesizerMidiSink::volume(MidiEvent& event) 
+void SynthesizerMidiSink::volume(const MidiEvent& event) 
 {
-    _synth.volume(toFloat(event.data2(), 0.0, 1.0));
+    _synth.volume(map(event.data2(), 0.0, 1.0));
 }
 
-void SynthesizerMidiSink::pitchBend(MidiEvent& event) 
+void SynthesizerMidiSink::pitchBend(const MidiEvent& event) 
 {
     uint16_t value = (event.data2() << 7) | (event.data1() & 0x7f);
-    _synth.pitchBend(toFloat(value,-1.0, 1.0));
+    _synth.pitchBend(map2(value,-1.0, 1.0));
 }
 
-void SynthesizerMidiSink::effect1(MidiEvent& event) 
+void SynthesizerMidiSink::effect1(const MidiEvent& event) 
 {
-    _synth.effect1(toFloat(event.data2(), 0.0, 1.0));
+    _synth.effect1(map(event.data2(), 0.0, 1.0));
 }
 
-void SynthesizerMidiSink::effect2(MidiEvent& event) 
+void SynthesizerMidiSink::effect2(const MidiEvent& event) 
 {
-    _synth.effect2(toFloat(event.data2(), 0.0, 1.0));
+    _synth.effect2(map(event.data2(), 0.0, 1.0));
 }
 
-void SynthesizerMidiSink::lowPassFilter(MidiEvent& event) 
+void SynthesizerMidiSink::lowPassFilter(const MidiEvent& event) 
 {
-    _synth.lowPassFilter(toFloat(event.data2(), 0.0, 1.0));
+    _synth.lowPassFilter(map(event.data2(), 0.0, 1.0));
 }
 
-void SynthesizerMidiSink::highPassFilter(MidiEvent& event) 
+void SynthesizerMidiSink::highPassFilter(const MidiEvent& event) 
 {
-    _synth.highPassFilter(toFloat(event.data2(), 0.0, 1.0));
+    _synth.highPassFilter(map(event.data2(), 0.0, 1.0));
 }
 
-void SynthesizerMidiSink::attack(MidiEvent& event) 
+void SynthesizerMidiSink::attack(const MidiEvent& event) 
 {
-    _synth.attack(toFloat(event.data2(), 0.0, 1.0));
+    _synth.attack(map(event.data2(), 0.0, 1.0));
 }
 
-void SynthesizerMidiSink::decay(MidiEvent& event) 
+void SynthesizerMidiSink::decay(const MidiEvent& event) 
 {
-    _synth.decay(toFloat(event.data2(), 0.0, 1.0));
+    _synth.decay(map(event.data2(), 0.0, 1.0));
 }
 
-void SynthesizerMidiSink::sustain(MidiEvent& event) 
+void SynthesizerMidiSink::sustain(const MidiEvent& event) 
 {
-    _synth.sustain(toFloat(event.data2(), 0.0, 1.0));
+    _synth.sustain(map(event.data2(), 0.0, 1.0));
 }
 
-void SynthesizerMidiSink::release(MidiEvent& event) 
+void SynthesizerMidiSink::release(const MidiEvent& event) 
 {
-    _synth.release(toFloat(event.data2(), 0.0, 1.0));
+    _synth.release(map(event.data2(), 0.0, 1.0));
 }
 
-void SynthesizerMidiSink::monoMode(MidiEvent& event) 
+void SynthesizerMidiSink::monoMode(const MidiEvent& event) 
 {
     _synth.monoMode();
 }
 
-void SynthesizerMidiSink::polyMode(MidiEvent& event) 
+void SynthesizerMidiSink::polyMode(const MidiEvent& event) 
 {
     _synth.polyMode();
 }
 
-void SynthesizerMidiSink::reset(MidiEvent& event)
+void SynthesizerMidiSink::reset(const MidiEvent& event)
 {
     _synth.reset();
 }
 
-void SynthesizerMidiSink::allNotesOff(MidiEvent& event) 
+void SynthesizerMidiSink::allNotesOff(const MidiEvent& event) 
 {
     _synth.allNotesOff();
 }

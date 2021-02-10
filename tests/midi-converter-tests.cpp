@@ -16,7 +16,7 @@ TEST(MidiConverter, ConvertNoteToFrequency)
 		value(3520,   Note::A, 7),
 		value(1174.7, Note::D, 6),	
 	};
-
+	
 	for(auto row : values)
 	{
 		float actual   = std::floor(Converter::toFrequency(std::get<1>(row), std::get<2>(row)));
