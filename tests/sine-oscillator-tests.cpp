@@ -4,13 +4,18 @@
 
 TEST(SineOscillatorTests, PLOT)
 {
-    BOSSCorp::Synthesis::Oscillators::SineOscillator oscillator;
+    using namespace BOSSCorp::Synthesis::Oscillators;
+    Configurations::SineConfiguration config;
+    SineOscillator oscillator(config);
     autoplot("sine", oscillator);
 }
 
 TEST(SineOscillatorTests, ConfirmFrequency)
 {
-    BOSSCorp::Synthesis::Oscillators::SineOscillator oscillator;
+    using namespace BOSSCorp::Synthesis::Oscillators;
+    Configurations::SineConfiguration config;
+    SineOscillator oscillator(config);
+
     int frequencies[] {20, 440, 3000};
     int size = sizeof(frequencies) / sizeof(frequencies[0]);
 

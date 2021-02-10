@@ -5,13 +5,18 @@
 
 TEST(SawtoothOscillatorTests, PLOT)
 {
-    BOSSCorp::Synthesis::Oscillators::ReverseSawToothOscillator oscillator;
+    using namespace BOSSCorp::Synthesis::Oscillators;
+    Configurations::ReverseSawoothConfiguration config;
+    ReverseSawToothOscillator oscillator(config);
     autoplot("reverse-sawtooth", oscillator);
 }
 
 TEST(SawtoothOscillatorTests, ConfirmFrequency)
 {
-    BOSSCorp::Synthesis::Oscillators::ReverseSawToothOscillator oscillator;
+    using namespace BOSSCorp::Synthesis::Oscillators;
+    Configurations::ReverseSawoothConfiguration config;
+    ReverseSawToothOscillator oscillator(config);
+    
     int frequencies[] {20, 440, 3000};
     int size = sizeof(frequencies) / sizeof(frequencies[0]);
 

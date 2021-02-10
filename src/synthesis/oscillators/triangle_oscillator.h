@@ -1,6 +1,6 @@
 #pragma once
 #include "sawtooth_oscillator.h"
-
+#include "configurations/triangle_configuration.h"
 namespace BOSSCorp::Synthesis::Oscillators
 {
 
@@ -12,6 +12,8 @@ private:
 protected:
     virtual float next();
     virtual void configure(float frequency, float amplitude = 1, float phaseShift = 0);
+public:
+    explicit TriangleOscillator(const Configurations::TriangleConfiguration& config) : SawToothOscillator(config) {}
 };
 
 } // end BOSSCorp::Synthesis::Oscillators

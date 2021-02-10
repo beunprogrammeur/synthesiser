@@ -5,14 +5,19 @@
 
 TEST(TriangleOscillatorTests, PLOT)
 {
-    BOSSCorp::Synthesis::Oscillators::TriangleOscillator oscillator;
+    using namespace BOSSCorp::Synthesis::Oscillators;
+    Configurations::TriangleConfiguration config;
+    TriangleOscillator oscillator(config);
     autoplot("triangle", oscillator);    
 }
 
 
 TEST(TriangleOscillatorTests, ConfirmFrequency)
 {
-    BOSSCorp::Synthesis::Oscillators::TriangleOscillator oscillator;
+    using namespace BOSSCorp::Synthesis::Oscillators;
+    Configurations::TriangleConfiguration config;
+    TriangleOscillator oscillator(config);
+
     int frequencies[] {20, 440, 3000};
     int size = sizeof(frequencies) / sizeof(frequencies[0]);
 

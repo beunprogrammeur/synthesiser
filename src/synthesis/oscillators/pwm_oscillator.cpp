@@ -3,8 +3,8 @@
 namespace BOSSCorp::Synthesis::Oscillators
 {
 
-PWMOscillator::PWMOscillator(const PWMConfiguration& pwmConfiguration)
-    : _configuration(pwmConfiguration)
+PWMOscillator::PWMOscillator(const Configurations::PWMConfiguration& config)
+    : IOscillator::IOscillator(config)
 {
 }
 
@@ -13,7 +13,7 @@ float PWMOscillator::next()
     float wavetime = 1.0 / frequency();
     float output = 0.5;
 
-    if(fmod(time(), wavetime) > _configuration.dutyCycle * wavetime)
+    if(fmod(time(), wavetime) > config().dutyCycle * wavetime)
     {
         output = -output;
     }

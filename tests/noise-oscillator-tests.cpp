@@ -5,6 +5,8 @@
 
 TEST(SawtoothOscillatorTests, PLOT)
 {
-    BOSSCorp::Synthesis::Oscillators::NoiseOscillator oscillator;
+    using namespace BOSSCorp::Synthesis::Oscillators;
+    Configurations::NoiseConfiguration config;
+    NoiseOscillator oscillator(config);
     autoplot("noise", oscillator);    
 }
