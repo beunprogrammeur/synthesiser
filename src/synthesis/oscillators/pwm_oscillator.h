@@ -8,7 +8,7 @@ class PWMOscillator : public IOscillator
 {
 protected:
     virtual float next();
-    const Configurations::PWMConfiguration& config() const { return reinterpret_cast<const Configurations::PWMConfiguration&>(_configuration); }
+    const Configurations::PWMConfiguration& config() const { return static_cast<const Configurations::PWMConfiguration&>(_configuration); }
 public:
     PWMOscillator(const Configurations::PWMConfiguration& oscConfiguration); 
 };

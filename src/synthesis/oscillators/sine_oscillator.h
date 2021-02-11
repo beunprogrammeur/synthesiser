@@ -6,6 +6,8 @@ namespace BOSSCorp::Synthesis::Oscillators
 
 class SineOscillator : public IOscillator
 {
+private:
+    const Configurations::SineConfiguration& config() const { return static_cast<const Configurations::SineConfiguration&>(_configuration); }
 protected:
     virtual float next();
 

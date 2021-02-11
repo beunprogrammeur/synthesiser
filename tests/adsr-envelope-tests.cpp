@@ -58,7 +58,7 @@ TEST(ADSREnvelopeTests, ManipulatesAmplitude)
     // the value should now be totaly dead
     ASSERT_EQ(0, last);
 
-    ASSERT_TRUE(ie.finised());
+    ASSERT_TRUE(ie.finished());
 }
 
 TEST(ADSREnvelopeTests, SquareOutput)

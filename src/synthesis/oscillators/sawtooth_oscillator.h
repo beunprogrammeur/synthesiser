@@ -6,6 +6,8 @@ namespace BOSSCorp::Synthesis::Oscillators
 
 class SawToothOscillator : public IOscillator
 {
+private:
+    const Configurations::SawtoothConfiguration& config() const { return static_cast<const Configurations::SawtoothConfiguration&>(_configuration); }
 protected:
     virtual float next();
 

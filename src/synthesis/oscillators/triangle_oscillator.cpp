@@ -5,7 +5,10 @@ namespace BOSSCorp::Synthesis::Oscillators
 
 float TriangleOscillator::next()
 {
-    float value = SawToothOscillator::next();
+    auto t = time();
+    float duration = (1.0 / frequency());
+    float remainder= fmod(t, duration);
+    float value = (config().amplitude / duration * remainder) - (config().amplitude / 2);    
     
     if(std::abs(value - previous) > 0.5)
     {
