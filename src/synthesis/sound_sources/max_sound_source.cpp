@@ -20,11 +20,11 @@ MaxSoundSource::MaxSoundSource(Envelopes::ADSRConfiguration& adsrConfig,
         PolySoundSource(_envelope)
     {
         add(_pwmOscillator);
-        add(_sawtoothOscillator);
-        add(_revereSawtoothOscillator);
-        add(_triangleOscillator);
-        add(_sineOscillator);
-        add(_noiseOscillator);
+        //add(_sawtoothOscillator);
+        //add(_revereSawtoothOscillator);
+        //add(_triangleOscillator);
+        //add(_sineOscillator);
+        //add(_noiseOscillator);
     }
 
 
