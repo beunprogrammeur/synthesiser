@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
 
+#include "midi/enums.h"
+
+
 #include "synthesis/sound_sources/poly_sound_source.h"
 #include "synthesis/envelopes/adsr_envelope.h"
 #include "synthesis/oscillators/oscillators.h"
@@ -121,3 +124,39 @@ TEST(PolySoundSourceTest, ActuallyOutputsData)
     ASSERT_TRUE(result > -0.5);
 }
 
+TEST(PolySoundSourceTest, configuresOscillators)
+{
+    using namespace BOSSCorp::Synthesis::Oscillators;
+    using namespace BOSSCorp::Synthesis::SoundSources;
+    using namespace BOSSCorp::Synthesis::Envelopes;
+
+    class MockOscillatorConfiguration : public Configurations::IOscillatorConfiguration
+    {
+
+    };
+
+    class MockOscillator : public IOscillator
+    {
+    protected:
+        virtual float next() { return 0; }
+    public:
+        MockOscillator(const MockOscillatorConfiguration& config) : IOscillator(config) {}
+    };
+
+    MockOscillatorConfiguration oscconfig;
+    MockOscillator oscillator(oscconfig);
+
+    ADSRConfiguration adsrconfig;
+    ADSREnvelope envelope(adsrconfig);
+
+
+    PolySoundSource source(envelope);
+    source.add(oscillator);
+
+    auto note = BOSSCorp::Midi::Note::C;
+    auto octave = 4;
+    auto amplitude = 1;
+
+    source.configure(note, octave, amplitude);
+    ASSERT_EQ(oscillator.frequency(), BOSSCorp::Midi::Converter::toFrequency(note, octave));
+}

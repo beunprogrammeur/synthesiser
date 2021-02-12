@@ -4,6 +4,7 @@
 #include "midi/enums.h"
 #include <functional>
 #include "sound_maker/sound_maker.hpp"
+#include "fft.h"
 
 using namespace BOSSCorp;
 
@@ -55,8 +56,9 @@ TEST(SynthesizerTests, GenerateC4Chordreturn)
         },
     };
 
-    SoundMaker smaker("synth-c4.wav");
+    std::vector<float> steps;
 
+    SoundMaker smaker("synth-c4.wav");
     for(int l = 0; l < loops; l++)
     {
         time += deltaTime * bufferSize;
@@ -74,14 +76,17 @@ TEST(SynthesizerTests, GenerateC4Chordreturn)
         }
 
         synth.process(buffer);        
-
-        lastTime = time;
-
-        auto data = buffer.data();
-        for(int i= 0; i < buffer.size(); i++)
-        {
-            smaker.add_sample(data[i], data[i]);
-        }
+        //lastTime = time;
+//
+        //auto data = buffer.data();
+//
+        //for(int i= 0; i < buffer.size(); i++)
+        //{
+        //    steps.emplace_back(data[i]);
+        //    smaker.add_sample(data[i], data[i]);
+        //}
     }
-    smaker.done();
+    //dataplot("synth-c4", steps);
+//
+    //smaker.done();
 }

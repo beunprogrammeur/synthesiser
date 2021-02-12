@@ -18,6 +18,7 @@ public:
     void add(Synthesis::Oscillators::IOscillator& oscillator) { _oscillators.emplace_back(&oscillator); oscillator.configure(Midi::Converter::toFrequency(note(), octave())); }
     void clear() { _oscillators.clear(); }
     virtual void reset() { for(auto* osc : _oscillators) { osc->reset(); } ISoundSource::reset(); }
+    virtual void configure(Midi::Note note, int8_t octave, float amplitude);
 };
 
 } // end BOSSCorp::Synthesis::SoundSources

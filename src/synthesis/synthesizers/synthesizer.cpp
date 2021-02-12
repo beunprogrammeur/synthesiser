@@ -96,7 +96,7 @@ void Synthesizer::process(Buffer& buffer)
 
     for(int i = 0; i < numSamples; i++)
     {
-        data[i] = mindata + (deltaSize * next(deltatime));
+        data[i] =  next(deltatime) * maxdata * 2.0;
     }
 }
 
