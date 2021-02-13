@@ -7,9 +7,17 @@ namespace BOSSCorp::Synthesis::Oscillators
 float ReverseSawToothOscillator::next()
 {
     auto t = time();
-    float duration = (1.0 / frequency());
-    float remainder= fmod(t, duration);
-    return -((config().amplitude / duration * remainder) - (config().amplitude / 2));
+    float wt = wavetime();
+
+    if(t > wt)
+    {
+        t -= wt;
+        time(t);
+    }
+
+    float a = amplitude();
+    
+    return -((a / wt * t) * 2.0f - a);
 }
 
 } // end BOSSCorp::Synthesis::Oscillators

@@ -20,7 +20,7 @@ float PWMOscillator::next()
         time(t);
     }
 
-    float a = amplitude() * 0.5; // a wave of a(1) would be -0.5 to 0.5
+    float a = amplitude(); // a wave of a(1) would be -0.5 to 0.5
 
     if(t > highTime) return -a;
     else             return  a;

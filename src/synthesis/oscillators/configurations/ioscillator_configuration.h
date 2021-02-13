@@ -5,8 +5,8 @@ namespace BOSSCorp::Synthesis::Oscillators::Configurations
 
 struct IOscillatorConfiguration
 {
-    float pitchBend = 0.0;
-    float amplitude = 1.0;
+    float pitchBend = 0.0f;
+    float amplitude = 1.0f;
 };
 
 } // end BOSSCorp::Synthesis::Oscillators::Configurations

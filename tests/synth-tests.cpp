@@ -76,17 +76,15 @@ TEST(SynthesizerTests, GenerateC4Chordreturn)
         }
 
         synth.process(buffer);        
-        //lastTime = time;
-//
-        //auto data = buffer.data();
-//
-        //for(int i= 0; i < buffer.size(); i++)
-        //{
-        //    steps.emplace_back(data[i]);
-        //    smaker.add_sample(data[i], data[i]);
-        //}
+        lastTime = time;
+
+        auto data = buffer.data();
+        for(int i= 0; i < buffer.size(); i++)
+        {
+            steps.emplace_back(data[i]);
+            smaker.add_sample(data[i], data[i]);
+        }
     }
-    //dataplot("synth-c4", steps);
-//
-    //smaker.done();
+    dataplot("synth-c4", steps);
+    smaker.done();
 }

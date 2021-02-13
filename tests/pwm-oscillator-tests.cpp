@@ -2,6 +2,7 @@
 #include "synthesis/oscillators/pwm_oscillator.h"
 
 #include "fft.h"
+#include "amplitudetest.h"
 
 using namespace BOSSCorp::Synthesis::Oscillators;
 using namespace Configurations;
@@ -78,18 +79,14 @@ TEST_F(PWMOscillatorTestFixture, DutyCycleTest)
 TEST_F(PWMOscillatorTestFixture, AmplitudeTest)
 {
     configuration->dutyCycle = 0.5;
-    
-    float max = 0;
-    float min = 0;
 
-    float deltaT = 0.001;
-    for(int i = 0; i < 1000; i++)
-    {
-        float sample = ioscillator->next(deltaT);
-        max = std::max(max, sample);
-        min = std::min(min, sample);
-    }
+    oscillator->configure(20);   
+    configuration->amplitude = 1.0f;
+    amplitudeTest(*oscillator, 1.0f);
 
-    ASSERT_EQ(max, configuration->amplitude / 2);
-    ASSERT_EQ(min, -configuration->amplitude / 2);
+    configuration->amplitude = 0.5f;
+    amplitudeTest(*oscillator, 0.5f);
+
+    oscillator->configure(20, 0.5f);
+    amplitudeTest(*oscillator, 0.25f);
 }

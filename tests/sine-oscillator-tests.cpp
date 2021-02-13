@@ -1,58 +1,59 @@
 #include <gtest/gtest.h>
 #include "synthesis/oscillators/sine_oscillator.h"
 #include "fft.h"
+#include "amplitudetest.h"
 
-TEST(SineOscillatorTests, PLOT)
+using namespace BOSSCorp::Synthesis::Oscillators;
+using namespace Configurations;
+
+class SineOscillatorTestFixture : public ::testing::Test
 {
-    using namespace BOSSCorp::Synthesis::Oscillators;
-    Configurations::SineConfiguration config;
-    SineOscillator oscillator(config);
-    autoplot("sine", oscillator);
+protected:
+    SineOscillator*     oscillator;
+    SineConfiguration * configuration;
+    IOscillator* ioscillator;
+    virtual void SetUp()
+    {
+        configuration = new SineConfiguration;
+        oscillator    = new SineOscillator(*configuration);
+        ioscillator   = oscillator;
+
+        ioscillator->configure(100);
+    }
+
+    virtual void TearDown()
+    {
+        delete oscillator;
+        delete configuration;
+        oscillator    = nullptr;
+        configuration = nullptr;
+        ioscillator   = nullptr;
+    }
+};
+
+TEST_F(SineOscillatorTestFixture, PLOT)
+{
+    autoplot("sine", *oscillator);
 }
 
-TEST(SineOscillatorTests, ConfirmFrequency)
+TEST_F(SineOscillatorTestFixture, ConfirmFrequency)
 {
-    using namespace BOSSCorp::Synthesis::Oscillators;
-    Configurations::SineConfiguration config;
-    SineOscillator oscillator(config);
-
     int frequencies[] {20, 440, 3000};
     int size = sizeof(frequencies) / sizeof(frequencies[0]);
 
-    doGlobalFrequencyTest(oscillator, frequencies, size, 5);
+    doGlobalFrequencyTest(*oscillator, frequencies, size, 5);
 }
 
 
-TEST(SineOscillatorTests, ConfirmAmplitude)
+TEST_F(SineOscillatorTestFixture, AmplitudeTest)
 {
-    using namespace BOSSCorp::Synthesis::Oscillators;
-    Configurations::SineConfiguration config;
-    SineOscillator oscillator(config);
-    IOscillator& osc = oscillator;
+    oscillator->configure(20);
+    configuration->amplitude = 1.0f;
+    amplitudeTest(*oscillator, 1.0f);
 
-    config.amplitude = 1;
-    config.pitchBend = 0;
-    oscillator.configure(20); // 20 hz
-    
-    float max = 0;
-    float min = 0;
+    configuration->amplitude = 0.5f;
+    amplitudeTest(*oscillator, 0.5f);
 
-    int steps = 1000;
-    float deltaTime = 1.0 / steps; // 1 second
-
-    for(int i = 0; i < steps; i++)
-    {
-        float value = osc.next(deltaTime);
-        min = std::min(min, value);
-        max = std::max(max, value);
-    }
-
-    float precision = 0.005;
-    ASSERT_GE(max, (config.amplitude / 2) - precision);
-    ASSERT_LE(max, (config.amplitude / 2) + precision);
-
-    ASSERT_GE(min, -(config.amplitude / 2) - precision);
-    ASSERT_LE(min, -(config.amplitude / 2) + precision);
-
-
+    ioscillator->configure(20, 0.5f);
+    amplitudeTest(*oscillator, 0.25f);
 }

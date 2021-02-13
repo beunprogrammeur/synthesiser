@@ -12,8 +12,6 @@ float PolySoundSource::next()
         output += oscillator->next(delta);
     }
 
-    output /= _oscillators.size();
-
     return output * _envelope.next(delta);
 }
 

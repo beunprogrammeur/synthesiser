@@ -85,34 +85,29 @@ void Synthesizer::process(Buffer& buffer)
     cleanOldSources();
 
 
-    float deltatime = 1.0 / buffer.sampleRate();
+    float deltatime = 1.0f / buffer.sampleRate();
     int numSamples = buffer.size();
 
     int16_t* data = buffer.data();
 
-    int mindata = std::numeric_limits<int16_t>::min();
     int maxdata = std::numeric_limits<int16_t>::max();
-    int deltaSize = maxdata - mindata;
 
     for(int i = 0; i < numSamples; i++)
     {
-        data[i] =  next(deltatime) * maxdata * 2.0;
+        data[i] = next(deltatime) * maxdata * 2.0f;
     }
 }
 
 float Synthesizer::next(float deltaT)
 {
-    int polyphony = 0;
-    float output = 0;
+    float output  = 0.0f;
     for(auto* source : _soundSources)
     {
         if(source == nullptr) continue;
         output += source->next(deltaT);
-        polyphony++;
     }
 
-    if(polyphony == 0) return 0.0;
-    return output / polyphony;
+    return output;
 }
 
     // velocity 0 = silence, 1 = bottom out.

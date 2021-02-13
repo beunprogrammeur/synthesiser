@@ -15,7 +15,7 @@ private:
     float _waveTime  = 0;
 protected:
     const Configurations::IOscillatorConfiguration& _configuration;
-
+    void wavetime(float value) { _waveTime = value; } // is reset when configure is called
 public:
     IOscillator(const Configurations::IOscillatorConfiguration& configuration) : _configuration(configuration) { }
     virtual void configure(float frequency, float amplitude = 1, float phaseShift = 0) { _frequency = frequency; _amplitude = amplitude; _waveTime = 1.0f / frequency; _shiftTime = (_waveTime * phaseShift); }
