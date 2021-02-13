@@ -3,22 +3,27 @@
 namespace BOSSCorp::Synthesis::Oscillators
 {
 
-PWMOscillator::PWMOscillator(const PWMConfiguration& pwmConfiguration)
-    : _configuration(pwmConfiguration)
+PWMOscillator::PWMOscillator(const Configurations::PWMConfiguration& config)
+    : IOscillator::IOscillator(config)
 {
 }
 
 float PWMOscillator::next()
 {
-    float wavetime = 1.0 / frequency();
-    float output = 0.5;
+    float t  = time();
+    float wt = wavetime();
+    float highTime = wt * config().dutyCycle;
 
-    if(fmod(time(), wavetime) > _configuration.dutyCycle * wavetime)
+    if(t > wt)
     {
-        output = -output;
+        t -= wt;
+        time(t);
     }
 
-    return output;
+    float a = amplitude(); // a wave of a(1) would be -0.5 to 0.5
+
+    if(t > highTime) return -a;
+    else             return  a;
 }
 
 } // end namespace BOSSCorp::Synthesis::Oscillators

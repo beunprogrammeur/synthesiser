@@ -4,9 +4,8 @@ namespace BOSSCorp::Synthesis::Oscillators
 {
 float NoiseOscillator::next()
 {
-    constexpr float max =  0.5;
-    constexpr float min = -0.5;
-
-    return ((float(std::rand()) / float(RAND_MAX)) * (max - min)) + min;
+    float  a = amplitude();
+    float  r = ((float) std::rand() / RAND_MAX) * 2.0f - 1.0f;
+    return a * r;
 }
 } // end BOSSCorp::Synthesis::Oscillators

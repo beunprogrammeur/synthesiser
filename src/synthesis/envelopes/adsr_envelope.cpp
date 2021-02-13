@@ -10,12 +10,12 @@ float ADSREnvelope::next()
 
     if(t < _configuration.attack)
     {
-        output = 1.0 / _configuration.attack * t;
+        output = 1.0f / _configuration.attack * t;
     }
     else if(t < _configuration.attack + _configuration.decay)
     {
         t -= _configuration.attack;
-        output = 1.0 - ((1.0 - _configuration.sustain) / _configuration.decay * t);
+        output = 1.0f - ((1.0f - _configuration.sustain) / _configuration.decay * t);
     } 
     else if(!_released)
     {

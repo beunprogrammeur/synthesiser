@@ -1,6 +1,6 @@
 #include "converter.h"
 #include <cmath>
-namespace BOSSCorp::MIDI 
+namespace BOSSCorp::Midi 
 {
 
 float Converter::toFrequency(Note note, int8_t octave)
@@ -21,18 +21,28 @@ float Converter::toFrequency(int8_t midiPitch)
 	Note    note   = Note::A;
 	int8_t octave = 0;
 
-	getNote(midiPitch, note, octave);
+	toNote(midiPitch, note, octave);
 	return toFrequency(note, octave);
 }
 
-void Converter::getNote(int midiPitch, Note& note, int8_t& octave)
+void Converter::toNote(int midiPitch, Note& note, int8_t& octave)
 {
     constexpr int A0 = 21;
-	midiPitch -= A0;
+	midiPitch  -= A0;
 
 	note   = static_cast<Note>(midiPitch % 12);
     octave = midiPitch / 12;
 	if (note > Note::B) octave++;
+}
+
+Channel Converter::toChannel(Status status)
+{
+	return static_cast<Channel>(static_cast<uint8_t>(status) & 0x0f);
+}
+
+Status Converter::stripChannel(Status status)
+{
+	return static_cast<Status>(static_cast<uint8_t>(status) & 0xf0);
 }
 
 

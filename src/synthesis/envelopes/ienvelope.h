@@ -12,7 +12,7 @@ private:
 protected:
     void finish() { _finished = true; }
 public:
-    bool finised() const { return _finished; }
+    bool finished() const { return _finished; }
 }; 
 
 } // end BOSSCorp::Synthesis::Envelopes

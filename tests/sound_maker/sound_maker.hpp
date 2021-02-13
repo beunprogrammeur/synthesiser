@@ -15,7 +15,7 @@
 
 class SoundMaker {
 	public:
-		SoundMaker(std::string file_name);		
+		SoundMaker(std::string file_name);
 		size_t done();
 		void add_sample( int channel_1, int channel_2 );
 

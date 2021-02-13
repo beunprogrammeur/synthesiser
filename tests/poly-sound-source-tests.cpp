@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
 
+#include "midi/enums.h"
+
+
 #include "synthesis/sound_sources/poly_sound_source.h"
 #include "synthesis/envelopes/adsr_envelope.h"
 #include "synthesis/oscillators/oscillators.h"
@@ -10,17 +13,24 @@
 TEST(PolySoundSourceTest, GenerateWaveFiles)
 {
     using namespace BOSSCorp::Synthesis;
-    Envelopes::ADSRConfiguration           configuration;
-    Envelopes::ADSREnvelope                envelope(configuration);
+    using namespace BOSSCorp::Synthesis::Oscillators;
+    Envelopes::ADSRConfiguration                configuration;
+    Envelopes::ADSREnvelope                     envelope(configuration);
+    
+    Configurations::PWMConfiguration            pwmConfig;
+    Configurations::NoiseConfiguration          noiseConfig;
+    Configurations::TriangleConfiguration       triangleConfig;
+    Configurations::SawtoothConfiguration       sawtoothConfig;
+    Configurations::ReverseSawoothConfiguration rsawtoothConfig;
+    Configurations::SineConfiguration           sineConfig;
 
-    Oscillators::PWMConfiguration pwmConfiguration;
 
-    Oscillators::SineOscillator            sineOscillator;
-    Oscillators::SawToothOscillator        sawtoothOscillator;
-    Oscillators::ReverseSawToothOscillator rsawtoothOscillator;
-    Oscillators::PWMOscillator             pwmOscillator(pwmConfiguration);
-    Oscillators::TriangleOscillator        triangleOscillator;
-    Oscillators::NoiseOscillator           noiseOscillator;
+    Oscillators::SineOscillator            sineOscillator(sineConfig);
+    Oscillators::SawToothOscillator        sawtoothOscillator(sawtoothConfig);
+    Oscillators::ReverseSawToothOscillator rsawtoothOscillator(rsawtoothConfig);
+    Oscillators::PWMOscillator             pwmOscillator(pwmConfig);
+    Oscillators::TriangleOscillator        triangleOscillator(triangleConfig);
+    Oscillators::NoiseOscillator           noiseOscillator(noiseConfig);
 
     struct OscillatorPack {
         std::string name;
@@ -62,8 +72,8 @@ TEST(PolySoundSourceTest, GenerateWaveFiles)
     soundSource.clear();
     soundSource.add(sineOscillator);
 
-    Oscillators::SineOscillator            sineOscillator2;
-    Oscillators::SineOscillator            sineOscillator3;
+    Oscillators::SineOscillator            sineOscillator2(sineConfig);
+    Oscillators::SineOscillator            sineOscillator3(sineConfig);
     sineOscillator2.configure(500);
     sineOscillator3.configure(700);
 
@@ -80,14 +90,16 @@ class MockOscillator : public BOSSCorp::Synthesis::Oscillators::IOscillator
 public:
     float amplitude = 0;
     virtual float next() { return amplitude; }
+    explicit MockOscillator(const BOSSCorp::Synthesis::Oscillators::Configurations::IOscillatorConfiguration& config) : IOscillator(config) {}
 };
 
 TEST(PolySoundSourceTest, ActuallyOutputsData)
 {
     using namespace BOSSCorp::Synthesis;
-    Envelopes::ADSRConfiguration configuration;
-    Envelopes::ADSREnvelope      envelope(configuration);
-    MockOscillator               oscillator;
+    Envelopes::ADSRConfiguration                          configuration;
+    Envelopes::ADSREnvelope                               envelope(configuration);
+    Oscillators::Configurations::IOscillatorConfiguration config;
+    MockOscillator                                        oscillator(config);
 
     oscillator.amplitude  = 0.5;
     configuration.attack  = 0.1;
@@ -112,3 +124,39 @@ TEST(PolySoundSourceTest, ActuallyOutputsData)
     ASSERT_TRUE(result > -0.5);
 }
 
+TEST(PolySoundSourceTest, configuresOscillators)
+{
+    using namespace BOSSCorp::Synthesis::Oscillators;
+    using namespace BOSSCorp::Synthesis::SoundSources;
+    using namespace BOSSCorp::Synthesis::Envelopes;
+
+    class MockOscillatorConfiguration : public Configurations::IOscillatorConfiguration
+    {
+
+    };
+
+    class MockOscillator : public IOscillator
+    {
+    protected:
+        virtual float next() { return 0; }
+    public:
+        MockOscillator(const MockOscillatorConfiguration& config) : IOscillator(config) {}
+    };
+
+    MockOscillatorConfiguration oscconfig;
+    MockOscillator oscillator(oscconfig);
+
+    ADSRConfiguration adsrconfig;
+    ADSREnvelope envelope(adsrconfig);
+
+
+    PolySoundSource source(envelope);
+    source.add(oscillator);
+
+    auto note = BOSSCorp::Midi::Note::C;
+    auto octave = 4;
+    auto amplitude = 1;
+
+    source.configure(note, octave, amplitude);
+    ASSERT_EQ(oscillator.frequency(), BOSSCorp::Midi::Converter::toFrequency(note, octave));
+}

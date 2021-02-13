@@ -12,9 +12,19 @@ float PolySoundSource::next()
         output += oscillator->next(delta);
     }
 
-    output /= _oscillators.size();
-
     return output * _envelope.next(delta);
+}
+
+void PolySoundSource::configure(Midi::Note note, int8_t octave, float amplitude)
+{
+    ISoundSource::configure(note, octave, amplitude);
+
+    float frequency = Midi::Converter::toFrequency(note, octave);
+
+    for(auto* oscillator : _oscillators)
+    {
+        oscillator->configure(frequency, amplitude);
+    }
 }
 
 } // end BOSSCorp::Synthesis::SoundSources

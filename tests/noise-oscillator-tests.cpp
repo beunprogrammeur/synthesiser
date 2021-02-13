@@ -3,8 +3,35 @@
 
 #include "fft.h"
 
-TEST(SawtoothOscillatorTests, PLOT)
+using namespace BOSSCorp::Synthesis::Oscillators;
+using namespace Configurations;
+
+class NoiseOscillatorTestFixture : public ::testing::Test
 {
-    BOSSCorp::Synthesis::Oscillators::NoiseOscillator oscillator;
-    autoplot("noise", oscillator);    
+protected:
+    NoiseOscillator* oscillator;
+    NoiseConfiguration * configuration;
+    IOscillator* ioscillator;
+    virtual void SetUp()
+    {
+        configuration = new NoiseConfiguration;
+        oscillator    = new NoiseOscillator(*configuration);
+        ioscillator   = oscillator;
+
+        oscillator->configure(100);
+    }
+
+    virtual void TearDown()
+    {
+        delete oscillator;
+        delete configuration;
+        oscillator    = nullptr;
+        configuration = nullptr;
+        ioscillator   = nullptr;
+    }
+};
+
+TEST_F(NoiseOscillatorTestFixture, PLOT)
+{
+    autoplot("noise", *oscillator);    
 }

@@ -22,9 +22,9 @@ void createWavFile(BOSSCorp::Synthesis::SoundSources::ISoundSource& soundSource,
         if(i == invokeFunctionAt) whatToDoAt2Seconds();
         float point = soundSource.next(deltatime);
         constexpr auto max = std::numeric_limits<int16_t>::max();
-        int sample = point * max * 2.0;
+        int sample = point * max;
 
-        smaker.add_sample(sample, 0);
+        smaker.add_sample(sample, sample);
         points.emplace_back(point);
     }
     smaker.done();
