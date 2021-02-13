@@ -23,6 +23,8 @@ private:
     Oscillators::Configurations::SineConfiguration           _sineConfig;
     Oscillators::Configurations::NoiseConfiguration          _noiseConfig;    
 
+    float _volume=0;
+
     const int _maxPolyphony;
 
     void cleanOldSources();
@@ -45,6 +47,9 @@ public:
     virtual void decay(float value);
     virtual void sustain(float value);
     virtual void release(float value);
+
+    virtual float volume() { return _volume; }
+    virtual void  volume(float value) { _volume = value; }
 
     virtual void reset();
 };

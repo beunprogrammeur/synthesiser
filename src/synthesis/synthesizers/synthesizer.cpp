@@ -6,6 +6,7 @@
 
 namespace BOSSCorp::Synthesis::Synthesizers
 {
+
 Synthesizer::Synthesizer(int maxPolyphony)
     : _soundSources()
     , _adsrConfig()
@@ -24,6 +25,7 @@ Synthesizer::Synthesizer(int maxPolyphony)
 
     reset();
 }
+
 Synthesizer::~Synthesizer()
 {
     for(int i = 0; i < _maxPolyphony; i++)
@@ -38,7 +40,8 @@ void Synthesizer::reset()
 {
     allNotesOff();
 
-    // TODO: make proper default variables
+    _volume = 0.25f;
+
     _adsrConfig.attack  = 0;
     _adsrConfig.decay   = 0;
     _adsrConfig.sustain = 0.8;
@@ -63,8 +66,6 @@ void Synthesizer::reset()
     _noiseConfig.amplitude = 0;
     _noiseConfig.pitchBend = 0;
 }
-
-
 
 void Synthesizer::cleanOldSources()
 {
@@ -94,7 +95,7 @@ void Synthesizer::process(Buffer& buffer)
 
     for(int i = 0; i < numSamples; i++)
     {
-        data[i] = next(deltatime) * maxdata * 2.0f;
+        data[i] = next(deltatime) * maxdata * 2.0f * _volume;
     }
 }
 
@@ -169,8 +170,6 @@ void Synthesizer::release(float value)
 {
     _adsrConfig.release = MaxReleaseSeconds * value;
 }
-
-
 
 } // end BOSSCorp::Synthesis::Synthesizers
 
