@@ -9,6 +9,7 @@ class ISynthesizer {
 public:
     virtual void process(Buffer& buffer) = 0;
 
+	virtual void init() {}
 
     // Resets to cold boot
     virtual void reset() {}

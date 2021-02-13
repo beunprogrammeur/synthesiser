@@ -53,8 +53,8 @@ enum class Status : uint8_t
 {
     // Channel voice messages. 0b.dddd.nnnn
     // Where d = data bit, n = channel.
-    NoteOn          = 0b10000000,
-    NoteOff         = 0b10010000,
+    NoteOn          = 0b10010000,
+    NoteOff         = 0b10000000,
     AfterTouch      = 0b10100000,
     ControlChange   = 0b10110000,
     ProgramChange   = 0b11000000,

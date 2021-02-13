@@ -18,22 +18,34 @@ Synthesizer::Synthesizer(int maxPolyphony)
     , _noiseConfig()
     , _maxPolyphony(maxPolyphony)
 {
-    for(int i=0; i< maxPolyphony; i++)
+}
+
+Synthesizer::~Synthesizer()
+{
+    for(auto* source : _soundSources)
     {
-        _soundSources.emplace_back(nullptr);
+    	delete source;
+    }
+    _soundSources.clear();
+}
+
+void Synthesizer::init()
+{
+    for(int i=0; i< _maxPolyphony; i++)
+    {
+        _soundSources.emplace_back(getNewSoundSource());
     }
 
     reset();
 }
 
-Synthesizer::~Synthesizer()
+void Synthesizer::allNotesOff()
 {
-    for(int i = 0; i < _maxPolyphony; i++)
-    {
-        _soundSources[i] != nullptr;
-        delete _soundSources[i];
-        _soundSources[i] = nullptr;
-    }
+	for(auto* source : _soundSources)
+	{
+		source->reset();
+		source->ignore(true);
+	}
 }
 
 void Synthesizer::reset()
@@ -42,15 +54,15 @@ void Synthesizer::reset()
 
     _volume = 0.25f;
 
-    _adsrConfig.attack  = 0;
-    _adsrConfig.decay   = 0;
+    _adsrConfig.attack  = 0.5;
+    _adsrConfig.decay   = 0.3;
     _adsrConfig.sustain = 0.8;
-    _adsrConfig.release = 0;
+    _adsrConfig.release = 2;
 
     _sineConfig.amplitude = 0.5;
     _sineConfig.pitchBend = 0;
 
-    _sawtoothConfig.amplitude = 0;
+    _sawtoothConfig.amplitude = 1.0;
     _sawtoothConfig.pitchBend = 0;
 
     _reverseSawtoothConfig.amplitude = 0;
@@ -59,7 +71,7 @@ void Synthesizer::reset()
     _triangleConfig.amplitude = 0;
     _triangleConfig.pitchBend = 0;
 
-    _pwmConfig.amplitude = 0.0;
+    _pwmConfig.amplitude = 0.5;
     _pwmConfig.dutyCycle = 0.5;
     _pwmConfig.pitchBend = 0;
 
@@ -69,16 +81,13 @@ void Synthesizer::reset()
 
 void Synthesizer::cleanOldSources()
 {
-    for(int i = 0; i < _maxPolyphony; i++)
-    {
-        auto* source = _soundSources[i];
-        if(source == nullptr) continue;
-        if(source->finished())
-        {
-            delete source;
-            _soundSources[i] = nullptr;
-        }
-    }
+	for(auto* source : _soundSources)
+	{
+		if(source->finished())
+		{
+			source->ignore(true);
+		}
+	}
 }
 
 void Synthesizer::process(Buffer& buffer)
@@ -104,8 +113,10 @@ float Synthesizer::next(float deltaT)
     float output  = 0.0f;
     for(auto* source : _soundSources)
     {
-        if(source == nullptr) continue;
-        output += source->next(deltaT);
+        if(!source->ignore())
+        {
+        	output += source->next(deltaT);
+        }
     }
 
     return output;
@@ -114,41 +125,40 @@ float Synthesizer::next(float deltaT)
     // velocity 0 = silence, 1 = bottom out.
 void Synthesizer::noteOn(Midi::Note note, int8_t octave, float velocity) 
 {
-    int addIndex = -1;
-    for(int i = 0; i < _maxPolyphony; i++)
-    {
-        if(_soundSources[i] == nullptr)
-        {
-            addIndex = i;
-            continue;
-        }
+	for(auto* source : _soundSources)
+	{
+		if(!source->ignore() && source->note() == note && source->octave() == octave)
+		{
+			return; // somehow, this note is already pressed.
+		}
+	}
 
-        if(_soundSources[i]->note() == note && _soundSources[i]->octave() == octave)
-        {
-            return;
-        }
-    }
+	for(auto* source : _soundSources)
+	{
+		if(source->ignore())
+		{
+			source->reset();
+			source->configure(note, octave, velocity);
+			return;
+		}
+	}
+}
 
-    if(addIndex > -1)
-    {
-        auto* source = new SoundSources::MaxSoundSource(_adsrConfig, _pwmConfig, _sawtoothConfig, _reverseSawtoothConfig, _triangleConfig, _sineConfig, _noiseConfig);
-        source->configure(note, octave, velocity);
-        _soundSources[addIndex] = source;
-    }    
+SoundSources::ISoundSource* Synthesizer::getNewSoundSource()
+{
+	return new SoundSources::MaxSoundSource(_adsrConfig, _pwmConfig, _sawtoothConfig, _reverseSawtoothConfig, _triangleConfig, _sineConfig, _noiseConfig);
 }
 
 void Synthesizer::noteOff(Midi::Note note, int8_t octave, float velocity) 
 {
-    for(int i = 0; i < _maxPolyphony; i++)
-    {
-        auto* source = _soundSources[i];
-
-        if(source != nullptr && source->note() == note && source->octave() == octave)
-        {
-            source->finished();
-            return;
-        }
-    }
+	for(auto* source : _soundSources)
+	{
+		if(source->note() == note && source->octave() == octave)
+		{
+			source->release();
+			return;
+		}
+	}
 }
 
 void Synthesizer::attack(float value)

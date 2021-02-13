@@ -13,6 +13,7 @@ protected:
     void finish() { _finished = true; }
 public:
     bool finished() const { return _finished; }
+    virtual void reset() { ISteppable::reset(); _finished = false; }
 }; 
 
 } // end BOSSCorp::Synthesis::Envelopes
