@@ -11,7 +11,7 @@ namespace BOSSCorp::Synthesis::Synthesizers
 
 class Synthesizer : public ISynthesizer
 {
-private:
+protected:
     std::vector<SoundSources::ISoundSource*> _soundSources {};
     
     Envelopes::ADSRConfiguration                             _adsrConfig;
@@ -30,6 +30,8 @@ private:
     void cleanOldSources();
 
     float next(float deltaT);
+
+    virtual SoundSources::ISoundSource* getNewSoundSource();
 public:
     const int MaxAttackSeconds  = 3;
     const int MaxDecaySeconds   = 3;
@@ -39,7 +41,7 @@ public:
     ~Synthesizer();
     virtual void process(Buffer& buffer);
 
-
+    virtual void init();
     // velocity 0 = silence, 1 = bottom out.
     virtual void noteOn(Midi::Note note, int8_t octave, float velocity);
     virtual void noteOff(Midi::Note note, int8_t octave, float velocity);
@@ -52,6 +54,9 @@ public:
     virtual void  volume(float value) { _volume = value; }
 
     virtual void reset();
+
+    virtual void allNotesOff();
+
 };
 
 } // end BOSSCorp::Synthesis::Synthesizers
