@@ -12,7 +12,7 @@ namespace BOSSCorp::Synthesis::Synthesizers
 class Synthesizer : public ISynthesizer
 {
 protected:
-    std::vector<SoundSources::ISoundSource*> _soundSources {};
+    std::vector<SoundSources::ISoundSource*> _soundSources { };
     
     Envelopes::ADSRConfiguration                             _adsrConfig;
 
@@ -50,13 +50,35 @@ public:
     virtual void sustain(float value);
     virtual void release(float value);
 
-    virtual float volume() { return _volume; }
+    virtual float volume() { return _volume;             }
     virtual void  volume(float value) { _volume = value; }
 
     virtual void reset();
 
     virtual void allNotesOff();
 
+    // 1 is the next note, -1 the previous note.
+    virtual void pitchBend(float value);
+
+    // 0 = clean, 1 = full application
+    virtual void effect1(float value);
+    virtual void effect2(float value);
+
+    // 0 = no filter, 1 = max filter
+    virtual void lowPassFilter(float value);
+    virtual void highPassFilter(float value);
+
+    virtual void monoMode();
+    virtual void polyMode();
+
+
+    virtual void pwmOscillatorVolume(float volume)             { _pwmConfig.amplitude = volume;             }
+    virtual void pwmOscillatorDutyCycle(float dutyCycle)       { _pwmConfig.dutyCycle = dutyCycle;          }
+    virtual void sineOscillatorVolume(float volume)            { _sineConfig.amplitude = volume;            }
+    virtual void sawtoothOscillatorVolume(float volume)        { _sawtoothConfig.amplitude = volume;        }
+    virtual void reverseSawtoothOscillatorVolume(float volume) { _reverseSawtoothConfig.amplitude = volume; }
+    virtual void triangleOscillatorVolume(float volume)        { _triangleConfig.amplitude = volume;        }
+    virtual void noiseOscillatorVolume(float volume)           { _noiseConfig.amplitude = volume;           }
 };
 
-} // end BOSSCorp::Synthesis::Synthesizers
+}// end BOSSCorp::Synthesis::Synthesizers

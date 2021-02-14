@@ -181,6 +181,41 @@ void Synthesizer::release(float value)
     _adsrConfig.release = MaxReleaseSeconds * value;
 }
 
+void Synthesizer::pitchBend(float value)
+{
+
+}
+
+void Synthesizer::effect1(float value)
+{
+    // not supported atm
+}
+
+void Synthesizer::effect2(float value)
+{
+    // not supported atm
+}
+
+void Synthesizer::lowPassFilter(float value)
+{
+    // not supported atm
+}
+
+void Synthesizer::highPassFilter(float value)
+{
+    // not supported atm
+}
+
+void Synthesizer::monoMode()
+{
+    // not supported atm
+}
+
+void Synthesizer::polyMode()
+{
+    // not supported atm
+}
+
 } // end BOSSCorp::Synthesis::Synthesizers
 
 

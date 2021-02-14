@@ -32,21 +32,29 @@ void SynthesizerMidiSink::controlChange(const MidiEvent& event)
 
     switch(cc)
     {
-        case CC::Volume: volume(event);                          return;
-        case CC::EffectControl1: effect1(event);                 return;
-        case CC::EffectControl2: effect2(event);                 return;
-        case CC::SoundReleaseTime: release(event);               return;
-        case CC::SoundAttackTime: attack(event);                 return;
-        case CC::LowPassFilterFrequency: lowPassFilter(event);   return;
-        case CC::SoundDecayTime: decay(event);                   return;
+        case CC::Volume:                  volume(event);         return;
+        case CC::EffectControl1:          effect1(event);        return;
+        case CC::EffectControl2:          effect2(event);        return;
+        case CC::SoundReleaseTime:        release(event);        return;
+        case CC::SoundAttackTime:         attack(event);         return;
+        case CC::LowPassFilterFrequency:  lowPassFilter(event);  return;
+        case CC::SoundDecayTime:          decay(event);          return;
         case CC::HighPassFilterFrequency: highPassFilter(event); return;
-        case CC::Sustain: sustain(event);                        return;
+        case CC::Sustain:                 sustain(event);        return;
 
-        case CC::AllNotesOff: allNotesOff(event); return;
-        case CC::OmniModeOff: omniMode(false);    return;
-        case CC::OmniModeOn: omniMode(true);      return;
-        case CC::MonoMode: monoMode(event);       return;
-        case CC::PolyMode: polyMode(event);       return;
+        case CC::AllNotesOff: allNotesOff(event);return;
+        case CC::OmniModeOff: omniMode(false);   return;
+        case CC::OmniModeOn:  omniMode(true);    return;
+        case CC::MonoMode:    monoMode(event);   return;
+        case CC::PolyMode:    polyMode(event);   return;
+
+        case PwmOscillatorVolumeCode:             pwmVolume(event);             return;
+        case PwmOscillatorDutyCycleCode:          pwmDutyCycle(event);          return;
+        case SineOscillatorVolumeCode:            sineVolume(event);            return;
+        case SawtoothOscillatorVolumeCode:        sawtoothVolume(event);        return;
+        case ReverseSawtoothOscillatorVolumeCode: reverseSawtoothVolume(event); return;
+        case TriangleOscillatorVolumeCode:        triangleVolume(event);        return;
+        case NoiseOscillatorVolumeCode:           noiseVolume(event);           return;
     }
 }
 
@@ -66,7 +74,7 @@ float SynthesizerMidiSink::map2(uint16_t data, float min, float max) const
     constexpr int centervalue = 0x4000;
     constexpr int mindata     = 0x0000;
 
-    if (data == centervalue) return (max - min) / 2.0;
+    if (data == centervalue) return (max - min) / 2.0f;
     if (data >= maxdata) return max;
     if (data <= mindata) return min;
 
@@ -79,7 +87,7 @@ void SynthesizerMidiSink::noteOn(const MidiEvent& event)
     int8_t octave;
     Converter::toNote(event.data1(),note, octave);
 
-    _synth.noteOn(note, octave, map(event.data2(), 0.0, 1.0));
+    _synth.noteOn(note, octave, map(event.data2(), 0.0f, 1.0f));
 }
 
 void SynthesizerMidiSink::noteOff(const MidiEvent& event) 
@@ -88,58 +96,58 @@ void SynthesizerMidiSink::noteOff(const MidiEvent& event)
     int8_t octave;
     Converter::toNote(event.data1(),note, octave);
 
-    _synth.noteOff(note, octave, map(event.data2(), 0.0, 1.0));
+    _synth.noteOff(note, octave, map(event.data2(), 0.0f, 1.0f));
 }
 
 void SynthesizerMidiSink::volume(const MidiEvent& event) 
 {
-    _synth.volume(map(event.data2(), 0.0, 1.0));
+    _synth.volume(map(event.data2(), 0.0f, 1.0f));
 }
 
 void SynthesizerMidiSink::pitchBend(const MidiEvent& event) 
 {
     uint16_t value = (event.data2() << 7) | (event.data1() & 0x7f);
-    _synth.pitchBend(map2(value,-1.0, 1.0));
+    _synth.pitchBend(map2(value,-1.0f, 1.0f));
 }
 
 void SynthesizerMidiSink::effect1(const MidiEvent& event) 
 {
-    _synth.effect1(map(event.data2(), 0.0, 1.0));
+    _synth.effect1(map(event.data2(), 0.0f, 1.0f));
 }
 
 void SynthesizerMidiSink::effect2(const MidiEvent& event) 
 {
-    _synth.effect2(map(event.data2(), 0.0, 1.0));
+    _synth.effect2(map(event.data2(), 0.0f, 1.0f));
 }
 
 void SynthesizerMidiSink::lowPassFilter(const MidiEvent& event) 
 {
-    _synth.lowPassFilter(map(event.data2(), 0.0, 1.0));
+    _synth.lowPassFilter(map(event.data2(), 0.0f, 1.0f));
 }
 
 void SynthesizerMidiSink::highPassFilter(const MidiEvent& event) 
 {
-    _synth.highPassFilter(map(event.data2(), 0.0, 1.0));
+    _synth.highPassFilter(map(event.data2(), 0.0f, 1.0f));
 }
 
 void SynthesizerMidiSink::attack(const MidiEvent& event) 
 {
-    _synth.attack(map(event.data2(), 0.0, 1.0));
+    _synth.attack(map(event.data2(), 0.0f, 1.0f));
 }
 
 void SynthesizerMidiSink::decay(const MidiEvent& event) 
 {
-    _synth.decay(map(event.data2(), 0.0, 1.0));
+    _synth.decay(map(event.data2(), 0.0f, 1.0f));
 }
 
 void SynthesizerMidiSink::sustain(const MidiEvent& event) 
 {
-    _synth.sustain(map(event.data2(), 0.0, 1.0));
+    _synth.sustain(map(event.data2(), 0.0f, 1.0f));
 }
 
 void SynthesizerMidiSink::release(const MidiEvent& event) 
 {
-    _synth.release(map(event.data2(), 0.0, 1.0));
+    _synth.release(map(event.data2(), 0.0f, 1.0f));
 }
 
 void SynthesizerMidiSink::monoMode(const MidiEvent& event) 
@@ -161,4 +169,40 @@ void SynthesizerMidiSink::allNotesOff(const MidiEvent& event)
 {
     _synth.allNotesOff();
 }
+
+void SynthesizerMidiSink::pwmVolume(const MidiEvent& event)
+{
+    _synth.pwmOscillatorVolume(map(event.data2(), 0.0f, 1.0f));
+}
+
+void SynthesizerMidiSink::pwmDutyCycle(const MidiEvent& event)
+{
+    _synth.pwmOscillatorDutyCycle(map(event.data2(), 0.0f, 1.0f));
+}
+
+void SynthesizerMidiSink::sawtoothVolume(const MidiEvent& event)
+{
+    _synth.sawtoothOscillatorVolume(map(event.data2(), 0.0f, 1.0f));
+}
+
+void SynthesizerMidiSink::reverseSawtoothVolume(const MidiEvent& event)
+{
+    _synth.reverseSawtoothOscillatorVolume(map(event.data2(), 0.0f, 1.0f));
+}
+
+void SynthesizerMidiSink::triangleVolume(const MidiEvent& event)
+{
+    _synth.triangleOscillatorVolume(map(event.data2(), 0.0f, 1.0f));
+}
+
+void SynthesizerMidiSink::noiseVolume(const MidiEvent& event)
+{
+    _synth.noiseOscillatorVolume(map(event.data2(), 0.0f, 1.0f));
+}
+
+void SynthesizerMidiSink::sineVolume(const MidiEvent& event)
+{
+    _synth.sineOscillatorVolume(map(event.data2(), 0.0f, 1.0f));
+}
+
 } // end  BOSSCorp::Midi
