@@ -3,11 +3,12 @@
 #include "midi/imidi_source.h"
 #include "midi/midi_event.h"
 #include "synthesis/buffer.h"
+#include "synthesis/synthesizers/synthesizer.h"
 
 using namespace BOSSCorp;
 using namespace BOSSCorp::Midi;
 
-class MockSynth : public Synthesis::Synthesizers::ISynthesizer
+class MockSynth : public Synthesis::Synthesizers::Synthesizer
 {
 public:
     bool processCalled;
@@ -31,6 +32,15 @@ public:
     bool monoModeCalled;
     bool polyModeCalled;
     bool allNotesOffCalled;
+    float sineVolume;
+    float noiseVolume;
+    float triangleVolume;
+    float sawtoothVolume;
+    float rsawtoothVolume;
+    float pwmVolume;
+    float pwmDutyCycle;
+    
+    MockSynth(int maxPolyphony) : Synthesizer(maxPolyphony) { } 
 
     virtual void process(Synthesis::Buffer &buffer) { processCalled = true; }
     // Resets to cold boot
@@ -72,6 +82,14 @@ public:
     virtual void monoMode() { monoModeCalled = true; }
     virtual void polyMode() { polyModeCalled = true; }
     virtual void allNotesOff() { allNotesOffCalled = true; }
+
+    virtual void pwmOscillatorVolume(float volume)             { pwmVolume       = volume;    }
+    virtual void pwmOscillatorDutyCycle(float dutyCycle)       { pwmDutyCycle    = dutyCycle; }
+    virtual void sineOscillatorVolume(float volume)            { sineVolume      = volume;    }
+    virtual void sawtoothOscillatorVolume(float volume)        { sawtoothVolume  = volume;    }
+    virtual void reverseSawtoothOscillatorVolume(float volume) { rsawtoothVolume = volume;    }
+    virtual void triangleOscillatorVolume(float volume)        { triangleVolume  = volume;    }
+    virtual void noiseOscillatorVolume(float volume)           { noiseVolume     = volume;    }
 };
 
 class SynthMidiSinkTestFixture : public ::testing::Test
@@ -85,7 +103,7 @@ protected:
     virtual void SetUp()
     {
         channel = Midi::Channel::Channel4;
-        synth   = new MockSynth;
+        synth   = new MockSynth(1);
         sink    = new Midi::SynthesizerMidiSink(channel, *synth);
         source  = new Midi::IMidiSource;
 
@@ -291,3 +309,69 @@ TEST_F(SynthMidiSinkTestFixture, resetCalled)
 
     ASSERT_TRUE(synth->resetCalled);
 }
+
+TEST_F(SynthMidiSinkTestFixture, pwmVolumeCalled)
+{
+    constexpr float value = 64;
+    auto event = ccevent(CC::Controller32, value);
+    source->send(event);
+
+    ASSERT_EQ(map(value, 0.0f, 1.0f), synth->pwmVolume);
+    
+}
+
+TEST_F(SynthMidiSinkTestFixture, pwmDutyCycleCalled)
+{
+    constexpr float value = 64;
+    auto event = ccevent(CC::Controller33, value);
+    source->send(event);
+
+    ASSERT_EQ(map(value, 0.0f, 1.0f), synth->pwmDutyCycle);
+}
+
+TEST_F(SynthMidiSinkTestFixture, sineVolumeCalled)
+{
+    constexpr float value = 64;
+    auto event = ccevent(CC::Controller38, value);
+    source->send(event);
+
+    ASSERT_EQ(map(value, 0.0f, 1.0f), synth->sineVolume);
+}
+
+TEST_F(SynthMidiSinkTestFixture, sawtoothVolumeCalled)
+{
+    constexpr float value = 64;
+    auto event = ccevent(CC::Controller34, value);
+    source->send(event);
+
+    ASSERT_EQ(map(value, 0.0f, 1.0f), synth->sawtoothVolume);
+    
+}
+
+TEST_F(SynthMidiSinkTestFixture, reverseSawtoothVolumeCalled)
+{
+    constexpr float value = 64;
+    auto event = ccevent(CC::Controller35, value);
+    source->send(event);
+
+    ASSERT_EQ(map(value, 0.0f, 1.0f), synth->rsawtoothVolume);
+}
+
+TEST_F(SynthMidiSinkTestFixture, noiseVolumeCalled)
+{
+    constexpr float value = 64;
+    auto event = ccevent(CC::Controller37, value);
+    source->send(event);
+
+    ASSERT_EQ(map(value, 0.0f, 1.0f), synth->noiseVolume);
+}
+
+TEST_F(SynthMidiSinkTestFixture, triangleVolumeCalled)
+{
+    constexpr float value = 64;
+    auto event = ccevent(CC::Controller36, value);
+    source->send(event);
+
+    ASSERT_EQ(map(value, 0.0f, 1.0f), synth->triangleVolume);
+}
+

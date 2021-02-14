@@ -55,7 +55,17 @@ add_test_executable(poly-sound-source-tests "poly-sound-source-tests.cpp"
 # midi sources and sinks
 add_test_executable(synth-midi-sink-tests "synth-midi-sink-tests.cpp" 
                    "midi/synthesizer_midi_sink.cpp"
-                   "midi/converter.cpp")
+                   "midi/converter.cpp"
+                   "synthesis/synthesizers/synthesizer.cpp"
+                   "synthesis/sound_sources/poly_sound_source.cpp" 
+                   "synthesis/sound_sources/max_sound_source.cpp" 
+                   "synthesis/envelopes/adsr_envelope.cpp" 
+                   "synthesis/oscillators/sine_oscillator.cpp"
+                   "synthesis/oscillators/sawtooth_oscillator.cpp"
+                   "synthesis/oscillators/reverse_sawtooth_oscillator.cpp"
+                   "synthesis/oscillators/noise_oscillator.cpp"
+                   "synthesis/oscillators/pwm_oscillator.cpp"
+                   "synthesis/oscillators/triangle_oscillator.cpp")
 
 # synthesizer tests
 add_test_executable(synth-tests "synth-tests.cpp"

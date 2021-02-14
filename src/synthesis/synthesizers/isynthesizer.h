@@ -50,7 +50,6 @@ public:
     virtual void polyMode() {}
 
     virtual void allNotesOff() {}
-
 };
 
 } // end BOSSCorp::Synthesis::Synthesizers
