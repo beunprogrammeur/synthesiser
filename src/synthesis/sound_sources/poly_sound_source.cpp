@@ -19,11 +19,9 @@ void PolySoundSource::configure(Midi::Note note, int8_t octave, float amplitude)
 {
     ISoundSource::configure(note, octave, amplitude);
 
-    float frequency = Midi::Converter::toFrequency(note, octave);
-
     for(auto* oscillator : _oscillators)
     {
-        oscillator->configure(frequency, amplitude);
+        oscillator->configure(note, octave, amplitude);
     }
 }
 

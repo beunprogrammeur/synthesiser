@@ -4,6 +4,7 @@
 #include "amplitudetest.h"
 
 using namespace BOSSCorp::Synthesis::Oscillators;
+using namespace BOSSCorp::Midi;
 using namespace Configurations;
 
 class SineOscillatorTestFixture : public ::testing::Test
@@ -18,7 +19,7 @@ protected:
         oscillator    = new SineOscillator(*configuration);
         ioscillator   = oscillator;
 
-        ioscillator->configure(100);
+        ioscillator->configure(Note::A, 4);
     }
 
     virtual void TearDown()
@@ -47,13 +48,13 @@ TEST_F(SineOscillatorTestFixture, ConfirmFrequency)
 
 TEST_F(SineOscillatorTestFixture, AmplitudeTest)
 {
-    oscillator->configure(20);
+    oscillator->configure(Note::A, 0);
     configuration->amplitude = 1.0f;
     amplitudeTest(*oscillator, 1.0f);
 
     configuration->amplitude = 0.5f;
     amplitudeTest(*oscillator, 0.5f);
 
-    ioscillator->configure(20, 0.5f);
+    ioscillator->configure(Note::A, 0, 0.5f);
     amplitudeTest(*oscillator, 0.25f);
 }

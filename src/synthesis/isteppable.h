@@ -15,7 +15,5 @@ protected:
 public:
     virtual float next(float deltaTime) { _time += deltaTime; return next(); }
     virtual void reset()        { _time  = 0;   }
-    
-
 };
 }

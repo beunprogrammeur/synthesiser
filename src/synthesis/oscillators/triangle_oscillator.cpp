@@ -24,10 +24,4 @@ float TriangleOscillator::next()
     return step * polarity;
 }
 
-void TriangleOscillator::configure(float frequency, float amplitude, float phaseShift)
-{
-    // doubling the frequency here is needed because next() halves the frequency as a sideeffect of using SawToothOscillator's next()
-    IOscillator::configure(frequency * 2, amplitude, phaseShift);
-}
-
 } // end BOSSCorp::Synthesis::Oscillators

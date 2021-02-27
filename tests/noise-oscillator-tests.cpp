@@ -18,7 +18,7 @@ protected:
         oscillator    = new NoiseOscillator(*configuration);
         ioscillator   = oscillator;
 
-        oscillator->configure(100);
+        oscillator->frequency(100);
     }
 
     virtual void TearDown()
