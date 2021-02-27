@@ -99,7 +99,7 @@ void autoplot(std::string waveform, BOSSCorp::Synthesis::Oscillators::IOscillato
         ss << waveform << "-" << frequency << "hz";
 
         oscillator.reset();
-        oscillator.configure(frequency);
+        oscillator.frequency(frequency);
         
         plot(ss.str(), oscillator, 8192, 44100);
     }
@@ -151,7 +151,7 @@ void doGlobalFrequencyTest(BOSSCorp::Synthesis::Oscillators::IOscillator& oscill
         int frequency = frequencies[i];
 
         oscillator.reset();
-        oscillator.configure(frequency);
+        oscillator.frequency(frequency);
         float detectedFrequency = detectFrequency(oscillator,samplerate, sampleSize);
 
         EXPECT_TRUE(detectedFrequency > (frequency - maxDeviation) && detectedFrequency < (frequency + maxDeviation));

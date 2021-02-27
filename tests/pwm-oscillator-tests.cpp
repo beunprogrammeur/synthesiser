@@ -5,6 +5,7 @@
 #include "amplitudetest.h"
 
 using namespace BOSSCorp::Synthesis::Oscillators;
+using namespace BOSSCorp::Midi;
 using namespace Configurations;
 
 class PWMOscillatorTestFixture : public ::testing::Test
@@ -20,7 +21,7 @@ protected:
         ioscillator   = oscillator;
 
         configuration->dutyCycle = 0.5;
-        oscillator->configure(100);
+        ioscillator->configure(Note::A, 4);
     }
 
     virtual void TearDown()
@@ -65,6 +66,8 @@ TEST_F(PWMOscillatorTestFixture, DutyCycleTest)
 
     int upSamples = 0;
 
+    oscillator->frequency(100);
+
     float deltaT = 0.001;
     for(int i = 0; i < 1000; i++)
     {
@@ -80,13 +83,13 @@ TEST_F(PWMOscillatorTestFixture, AmplitudeTest)
 {
     configuration->dutyCycle = 0.5;
 
-    oscillator->configure(20);   
+    oscillator->configure(Note::A, 0);
     configuration->amplitude = 1.0f;
     amplitudeTest(*oscillator, 1.0f);
 
     configuration->amplitude = 0.5f;
     amplitudeTest(*oscillator, 0.5f);
 
-    oscillator->configure(20, 0.5f);
+    oscillator->configure(Note::A, 0, 0.5f);
     amplitudeTest(*oscillator, 0.25f);
 }

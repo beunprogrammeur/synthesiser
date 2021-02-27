@@ -14,6 +14,7 @@ TEST(SynthesizerTests, GenerateC4Chordreturn)
     int sampleRate = 44100;
     Synthesis::Synthesizers::Synthesizer synth(10);
     Synthesis::Buffer buffer(bufferSize, sampleRate);
+    synth.init();
     synth.attack(0.3);
     synth.decay(0.1);
     synth.sustain(0.8);

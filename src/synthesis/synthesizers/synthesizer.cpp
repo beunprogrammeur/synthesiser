@@ -183,7 +183,12 @@ void Synthesizer::release(float value)
 
 void Synthesizer::pitchBend(float value)
 {
-
+    _sineConfig.pitchBend            = value;
+    _sawtoothConfig.pitchBend        = value;
+    _reverseSawtoothConfig.pitchBend = value;
+    _triangleConfig.pitchBend        = value;
+    _pwmConfig.pitchBend             = value; 
+    _noiseConfig.pitchBend           = value;
 }
 
 void Synthesizer::effect1(float value)

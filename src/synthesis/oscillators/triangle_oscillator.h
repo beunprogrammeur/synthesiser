@@ -1,10 +1,10 @@
 #pragma once
-#include "sawtooth_oscillator.h"
+#include "ioscillator.h"
 #include "configurations/triangle_configuration.h"
 namespace BOSSCorp::Synthesis::Oscillators
 {
 
-class TriangleOscillator : public SawToothOscillator
+class TriangleOscillator : public IOscillator
 {
 private:
     float polarity = 1;
@@ -14,9 +14,9 @@ private:
 
 protected:
     virtual float next();
-    virtual void configure(float frequency, float amplitude = 1, float phaseShift = 0);
+    virtual void frequency(float value) { IOscillator::frequency(value * 2.0f); }
 public:
-    explicit TriangleOscillator(const Configurations::TriangleConfiguration& config) : SawToothOscillator(config) {}
+    explicit TriangleOscillator(const Configurations::TriangleConfiguration& config) : IOscillator(config) {}
 };
 
 } // end BOSSCorp::Synthesis::Oscillators

@@ -3,7 +3,7 @@
 namespace BOSSCorp::Midi 
 {
 
-float Converter::toFrequency(Note note, int8_t octave)
+float Converter::toFrequency(Note note, int8_t octave, float bend)
 {
 	constexpr float ratio = 1.059463094359; // pow(2.0, 1.0/12.0);
 	constexpr float baseNote = 440;         // note A4
@@ -13,16 +13,16 @@ float Converter::toFrequency(Note note, int8_t octave)
 
 	if(notenum > 2) octave -= 1;
 
-	return baseNote * pow(ratio, (notenum + (octave * 12))); 
+	return baseNote * pow(ratio, (notenum + bend + (octave * 12))); 
 }
 
-float Converter::toFrequency(int8_t midiPitch)
+float Converter::toFrequency(int8_t midiPitch, float bend)
 {
 	Note    note   = Note::A;
 	int8_t octave = 0;
 
 	toNote(midiPitch, note, octave);
-	return toFrequency(note, octave);
+	return toFrequency(note, octave, bend);
 }
 
 void Converter::toNote(int midiPitch, Note& note, int8_t& octave)

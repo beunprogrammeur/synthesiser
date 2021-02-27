@@ -63,7 +63,7 @@ TEST(PolySoundSourceTest, GenerateWaveFiles)
     {
         soundSource.clear();
         soundSource.add(pack.oscillator);
-        pack.oscillator.configure(frequency);
+        pack.oscillator.frequency(frequency);
         soundSource.reset();
         
         createWavFile(source, pack.name, [&](){envelope.release();});
@@ -74,8 +74,13 @@ TEST(PolySoundSourceTest, GenerateWaveFiles)
 
     Oscillators::SineOscillator            sineOscillator2(sineConfig);
     Oscillators::SineOscillator            sineOscillator3(sineConfig);
-    sineOscillator2.configure(500);
-    sineOscillator3.configure(700);
+
+    sineOscillator.configure(BOSSCorp::Midi::Note::A, 0);
+    sineOscillator2.configure(BOSSCorp::Midi::Note::A, 0);
+    sineOscillator3.configure(BOSSCorp::Midi::Note::A, 0);
+
+    sineOscillator2.frequency(500);
+    sineOscillator3.frequency(700);
 
     soundSource.add(sineOscillator2);
     soundSource.add(sineOscillator3);
